@@ -33,21 +33,20 @@ export class StepFunctionUnmarshallDynamodbStack extends cdk.Stack {
       resultSelector: {
         item: JsonPath.stringAt("$.Item"),
       },
+      resultPath: "$.dynamoDbItem",
     });
 
     const unmarshall = new DynamoUnmarshall(this, "Unmarshall", {
-      path: "$states.input.item",
+      path: "$states.input.dynamoDbItem.item",
       variableName: "unmarshalledItem",
     });
 
-    const combine = new CustomState(this, "Combine", {
+    const combine = new CustomState(this, "Format", {
       stateJson: {
         Type: "Pass",
         QueryLanguage: "JSONata",
         Output: {
           unmarshalledItem: "{% $unmarshalledItem %}",
-          map: "{% $unmarshalledItem.MapAttribute.NestedString %}",
-          number: "{% $unmarshalledItem.NumberAttribute %}",
         },
       },
     });
