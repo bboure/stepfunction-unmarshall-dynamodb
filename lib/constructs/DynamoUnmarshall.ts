@@ -24,8 +24,8 @@ const generateUnmarshall = (path: string) => `{% (
       : $type in ['N'] ? $number($value)
       : $type in ['M'] ? $unmarshall($value)
       : $type in ['BOOL', 'Bool'] ? $value = 'true' or $value = true
-      : $type in ['L'] ? $map($value, $convertValue)
-      : $type in ['NS', 'Ns'] ? $value.$number()
+      : $type in ['L'] ? [$map($value, $convertValue)]
+      : $type in ['NS', 'Ns'] ? [$value.$number()]
       : $type in ['NULL', 'Null', 'Nul'] ? null
       : $error('Unsupported type: ' & $type);
   )};
